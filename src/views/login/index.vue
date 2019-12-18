@@ -5,20 +5,21 @@
       <div class="title">
         <img src="../../assets/img/logo_index.png" alt srcset />
       </div>
-      <el-form ref="From" style="margin-top:20px">
+      <!-- 表单域 -->
+      <el-form ref="myForm" style="margin-top:20px" :model="loginForm" :rules="loginRules">
           <el-form-item prop="mobile">
-              <el-input placeholder="请您输入手机号" v-model="Form.mobile"></el-input>
+              <el-input placeholder="请您输入手机号" v-model="loginForm.mobile"></el-input>
           </el-form-item>
           <el-form-item prop="code">
-              <el-input style="width:200px" placeholder="请您输入验证码" v-model="Form.code"></el-input>
+              <el-input style="width:200px" placeholder="请您输入验证码" v-model="loginForm.code"></el-input>
               <el-button style="float:right" plain>发送验证码</el-button>
           </el-form-item>
-          <el-form-item>
-            <el-checkbox>我已阅读并同意用户协议和隐私条款</el-checkbox>
+          <el-form-item prop="check">
+            <el-checkbox v-model="loginForm.check">我已阅读并同意用户协议和隐私条款</el-checkbox>
           </el-form-item>
-          <el-from-item>
-            <el-button style="width:100%" type="primary">登录</el-button>
-          </el-from-item>
+          <el-form-item>
+            <el-button style="width:100%" type="primary" @click="submitLogin">登录</el-button>
+          </el-form-item>
       </el-form>
     </el-card>
   </div>
@@ -28,12 +29,58 @@
 export default {
   data () {
     return {
-      Form: {
+      // 定义表单数据对象
+      loginForm: {
         mobile: ' ',
         code: ' ',
-        check: ' '
+        check: false // 是否勾选
+      },
+      loginRules: {
+        // 验证规则
+        // required=>true
+        mobile: [
+          {
+            required: true,
+            message: '请输入您的手机号'
+          },
+          {
+            pattern: /^1[3456789]\d{9}$/,
+            message: '手机号格式不正确'
+          }
+        ],
+        code: [
+          {
+            required: true,
+            message: '请输入您的验证码'
+          },
+          {
+            pattern: /^\d{6}$/,
+            message: '验证码不正确'
+          }
+        ],
+        check: [
+          {
+            validator: function (rule, value, callback) {
+              if (value) {
+                callback()
+              } else {
+                callback(new Error('必须要统一协议'))
+              }
+            }
+          }
+        ]
       }
-
+    }
+  },
+  methods: {
+    submitLogin () {
+      // 校验整个表单的规则
+      // validate 是一个方法 => 方法中传入的一个函数 两个校验参数  是否校验成功/未校验成功的字段
+      this.$refs.myForm.validate(function (isOK) {
+        if (isOK) {
+          console.log('校验成功')
+        }
+      })
     }
   }
 }

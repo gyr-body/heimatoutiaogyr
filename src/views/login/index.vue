@@ -7,25 +7,26 @@
       </div>
       <!-- 表单域 -->
       <el-form ref="myForm" style="margin-top:20px" :model="loginForm" :rules="loginRules">
-          <el-form-item prop="mobile">
-              <el-input placeholder="请您输入手机号" v-model="loginForm.mobile"></el-input>
-          </el-form-item>
-          <el-form-item prop="code">
-              <el-input style="width:200px" placeholder="请您输入验证码" v-model="loginForm.code"></el-input>
-              <el-button style="float:right" plain>发送验证码</el-button>
-          </el-form-item>
-          <el-form-item prop="check">
-            <el-checkbox v-model="loginForm.check">我已阅读并同意用户协议和隐私条款</el-checkbox>
-          </el-form-item>
-          <el-form-item>
-            <el-button style="width:100%" type="primary" @click="submitLogin">登录</el-button>
-          </el-form-item>
+        <el-form-item prop="mobile">
+          <el-input placeholder="请您输入手机号" v-model="loginForm.mobile"></el-input>
+        </el-form-item>
+        <el-form-item prop="code">
+          <el-input style="width:200px" placeholder="请您输入验证码" v-model="loginForm.code"></el-input>
+          <el-button style="float:right" plain>发送验证码</el-button>
+        </el-form-item>
+        <el-form-item prop="check">
+          <el-checkbox v-model="loginForm.check">我已阅读并同意用户协议和隐私条款</el-checkbox>
+        </el-form-item>
+        <el-form-item>
+          <el-button style="width:100%" type="primary" @click="submitLogin">登录</el-button>
+        </el-form-item>
       </el-form>
     </el-card>
   </div>
 </template>
 
 <script>
+// import axios from 'axios'
 export default {
   data () {
     return {
@@ -76,9 +77,24 @@ export default {
     submitLogin () {
       // 校验整个表单的规则
       // validate 是一个方法 => 方法中传入的一个函数 两个校验参数  是否校验成功/未校验成功的字段
-      this.$refs.myForm.validate(function (isOK) {
+      this.$refs.myForm.validate(isOK => {
         if (isOK) {
-          console.log('校验成功')
+          this.$axios({
+            url: '/authorizations',
+            method: 'post',
+            data: this.loginForm
+          })
+            .then(result => {
+              window.localStorage.setItem('user-token', result.data.data.token) // 缓存令牌
+              this.$router.push('/home') // 跳转到主页
+            })
+            .catch(() => {
+              // elementUI的方法
+              this.$message({
+                message: '您的手机号或者验证码不正确',
+                type: 'warning'
+              })
+            })
         }
       })
     }
@@ -99,8 +115,8 @@ export default {
     height: 350px;
     background-color: white;
     .title {
-        margin-top: 10px;
-        text-align: center;
+      margin-top: 10px;
+      text-align: center;
       img {
         height: 40px;
       }

@@ -30,6 +30,17 @@ export default {
       userInfo: {}, // 用户信息
       defaultImg: require('../../assets/img/avatar.jpg') // 先把地址转换成变量
     }
+  },
+  created () {
+    let token = window.localStorage.getItem('user-token')
+    this.$axios({
+      url: '/user/profile',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).then(result => {
+      this.userInfo = result.data.data
+    })
   }
 }
 </script>

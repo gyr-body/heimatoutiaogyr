@@ -8,7 +8,9 @@
     <!-- 上下布局 -->
     <el-container>
       <!-- 顶栏容器 -->
-      <el-header>顶部</el-header>
+      <el-header>
+        <layout-header></layout-header>
+      </el-header>
       <!-- 主要区域容器 -->
       <el-main>主要区域</el-main>
     </el-container>
@@ -17,9 +19,11 @@
 
 <script>
 import loginAside from '../../components/home/layout-aside'
+import layoutHeader from '../../components/home/layout-header'
 export default {
   components: {
-    'login-aside': loginAside
+    'login-aside': loginAside,
+    'layout-header': layoutHeader
   }
 }
 </script>

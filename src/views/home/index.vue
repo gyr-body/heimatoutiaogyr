@@ -2,7 +2,9 @@
   <!-- 外层容器 -->
   <el-container>
     <!-- 侧边栏容器 -->
-    <el-aside>左侧</el-aside>
+    <el-aside style="background-color:#353b4e;height:100vh">
+      <login-aside></login-aside>
+    </el-aside>
     <!-- 上下布局 -->
     <el-container>
       <!-- 顶栏容器 -->
@@ -14,7 +16,12 @@
 </template>
 
 <script>
-export default {}
+import loginAside from '../../components/home/layout-aside'
+export default {
+  components: {
+    'login-aside': loginAside
+  }
+}
 </script>
 
 <style>

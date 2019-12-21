@@ -1,30 +1,35 @@
 <template>
-  <!-- 外层容器 -->
+  <!-- 放置一个外层容器 -->
   <el-container>
-    <!-- 侧边栏容器 -->
-    <el-aside style="background-color:#353b4e;height:100vh">
-      <login-aside></login-aside>
+    <!-- 左右布局 -->
+    <el-aside style="background-color:#353b4e;min-height:100vh;width:230px">
+      <!-- 放置左侧组件 -->
+      <layout-aside></layout-aside>
     </el-aside>
-    <!-- 上下布局 -->
+    <!-- 再放置一个container -->
     <el-container>
-      <!-- 顶栏容器 -->
+      <!-- 上下布局 -->
       <el-header>
-        <layout-header></layout-header>
+        <!-- 头部组件 -->
+         <layout-header></layout-header>
       </el-header>
-      <!-- 主要区域容器 -->
-      <el-main>主要区域</el-main>
+      <!-- 主要区域 -->
+      <el-main style="padding:0">
+        <!-- 二级路由容器 -->
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
 
 <script>
-import loginAside from '../../components/home/layout-aside'
-import layoutHeader from '../../components/home/layout-header'
+// import loginAside from '../../components/home/layout-aside'
+// import layoutHeader from '../../components/home/layout-header'
 export default {
-  components: {
-    'login-aside': loginAside,
-    'layout-header': layoutHeader
-  }
+  // components: {
+  //   'login-aside': loginAside,
+  //   'layout-header': layoutHeader
+  // }
 }
 </script>
 

@@ -10,4 +10,11 @@ axios.interceptors.request.use(function (config) {
   // 请求失败  处理
   return Promise.reject(error)
 })
+// 响应拦截 响应数据 回来 到达then方法之前
+axios.interceptors.response.use(function (response) {
+  // 对响应数据做处理 执行成功时进入
+  return response.data ? response.data : {}
+}, function () {
+  // 执行失败时执行
+})
 export default axios

@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import '../permission'
 import VueRouter from 'vue-router'
 import Home from '../views/home' // 引用组件
 import Login from '../views/login'// 引用组件
@@ -19,7 +20,8 @@ const routes = [
     children: [{
       path: '',
       component: Home2
-    }]
+    }
+    ]
   },
   {
     path: '/login',

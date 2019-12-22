@@ -17,8 +17,6 @@ axios.interceptors.response.use(function (response) {
   // 对响应数据做处理 执行成功时进入
   return response.data ? response.data : {}
 }, function (error) {
-  debugger
-  console.log(error)
   // 所有的失败都会进入
   // 执行失败时执行
   // 获取状态码

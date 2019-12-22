@@ -3,6 +3,7 @@ import '../permission'
 import VueRouter from 'vue-router'
 import Home from '../views/home' // 引用组件
 import Login from '../views/login'// 引用组件
+import '../views/comment'
 import Home2 from '../views/home/home' // 默认背景
 Vue.use(VueRouter)
 
@@ -20,6 +21,10 @@ const routes = [
     children: [{
       path: '',
       component: Home2
+    },
+    {
+      path: '/comment',
+      component: () => import('../views/comment')
     }
     ]
   },

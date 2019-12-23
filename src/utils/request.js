@@ -1,6 +1,7 @@
 import axios from 'axios'
 import router from '../router'
 import { Message } from 'element-ui' // 引入一个提示对象
+import JSONBig from 'json-bigint'
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0' // 赋值黑马头条的默认地址
 axios.interceptors.request.use(function (config) {
   // 获取token
@@ -12,6 +13,12 @@ axios.interceptors.request.use(function (config) {
   // 请求失败  处理
   return Promise.reject(error)
 })
+axios.defaults.transformResponse = [function (data) {
+  // data是响应回来的数据
+  // debugger
+  // let result =JSON.parse(data)
+  return JSONBig.parse(data)
+}]
 // 响应拦截 响应数据 回来 到达then方法之前
 axios.interceptors.response.use(function (response) {
   // 对响应数据做处理 执行成功时进入

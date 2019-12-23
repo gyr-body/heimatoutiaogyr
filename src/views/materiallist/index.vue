@@ -17,6 +17,9 @@
         </el-tab-pane>
       <el-tab-pane label="收藏素材" name="collect"></el-tab-pane>
     </el-tabs>
+    <el-row type="flex" justify="center" align="middle" style="height:80px">
+      <el-pagination background layout="prev, pager, next" :total="page.total" :current-page="page.currentPage" :page-size="page.pageSize" @current-change="changePage"></el-pagination>
+    </el-row>
   </el-card>
 </template>
 
@@ -25,16 +28,34 @@ export default {
   data () {
     return {
       activeName: 'all', // 默认选中项
-      list: []
+      list: [],
+      page: {
+        currentPage: 1,
+        pageSize: 8,
+        total: 10
+      }
     }
   },
   methods: {
+    changePage (newPage) {
+      this.page.currentPage = newPage
+      this.getAllMaterial()
+    },
+    changeTab () {
+      this.page.currentPage = 1
+      this.getAllMaterial()
+    },
     getAllMaterial () {
       this.$axios({
         url: 'user/images',
-        params: { collect: false }
+        params: {
+          collect: this.activeName === 'collect',
+          page: this.page.currentPage,
+          per_page: this.page.pageSize
+        }
       }).then(result => {
         this.list = result.data.results
+        this.page.total = result.data.total_count
       })
     }
   },

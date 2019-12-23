@@ -2,7 +2,7 @@
   <!-- 卡片组件 -->
   <el-card>
     <!-- 面包屑组件 -->
-    <bread-crumb>
+    <bread-crumb class="crumb">
       <!-- 具名插槽 -->
       <template slot="title">评论列表</template>
     </bread-crumb>
@@ -14,10 +14,17 @@
       <el-table-column label="操作">
         <template slot-scope="obj">
           <el-button type="text">修改</el-button>
-          <el-button type='text' size="small" @click="openOrClose(obj.row)">{{  obj.row.comment_status ? '关闭评论' : '打开评论'  }}</el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="openOrClose(obj.row)"
+          >{{ obj.row.comment_status ? '关闭评论' : '打开评论' }}</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <el-row type="flex" justify="center" align="middle" style="height:80px">
+      <el-pagination background layout="prev, pager, next" :total="page.total" :current-page="page.currentPage" :page-size="page.pageSize" @current-change="changePage"></el-pagination>
+    </el-row>
   </el-card>
 </template>
 
@@ -25,7 +32,13 @@
 export default {
   data () {
     return {
-      list: []
+      list: [],
+      page: {
+        // 放置分页数据
+        total: 700, // 数据总数
+        pageSize: 10, // 默认每页10条数据
+        currentPage: 1 // 当前页码  默认第一页
+      }
     }
   },
   methods: {
@@ -33,9 +46,11 @@ export default {
       // 请求列表数据
       this.$axios({
         url: '/articles',
-        params: { response_type: 'comment' }
+        params: { response_type: 'comment', page: this.page.currentPage, per_page: this.page.pageSize }
       }).then(result => {
-        this.list = result.data.results
+        // alert(1)
+        this.list = result.data.results// 获取评论列表数据给本身data
+        this.page.total = result.data.total_count// 获取文章总条数
       })
     },
     formatterBool (row, column, cellValue, index) {
@@ -69,6 +84,13 @@ export default {
           this.getComment() // 重新请求列表
         })
       })
+    },
+    // 分页
+    // 修改当前页码
+    changePage (newPage) {
+      //  修改当前页码
+      this.page.currentPage = newPage
+      this.getComment()
     }
   },
   created () {
@@ -78,5 +100,8 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less" scoped>
+.crumb{
+  margin-bottom: 20px
+}
 </style>

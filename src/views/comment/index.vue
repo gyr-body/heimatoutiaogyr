@@ -1,6 +1,6 @@
 <template>
   <!-- 卡片组件 -->
-  <el-card v-loading="loading">
+  <el-card>
     <!-- 面包屑组件 -->
     <bread-crumb class="crumb">
       <!-- 具名插槽 -->
@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     getComment () {
-      this.loading = true
+      // this.loading = true // 加载状态
       // 请求列表数据
       this.$axios({
         url: '/articles',
@@ -53,7 +53,7 @@ export default {
         // alert(1)
         this.list = result.data.results// 获取评论列表数据给本身data
         this.page.total = result.data.total_count// 获取文章总条数
-        setTimeout(() => { this.loading = false }, 300)
+        // setTimeout(() => { this.loading = false }, 300) // 关闭加载
       })
     },
     formatterBool (row, column, cellValue, index) {

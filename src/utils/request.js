@@ -44,9 +44,7 @@ axios.interceptors.response.use(function (response) {
       break
   }
   // 状态码  提示
-  Message({
-    type: 'warning',
-    message
-  })
+  Message({ type: 'warning', message }) // 提示消息
+  return Promise.reject(error)
 })
 export default axios

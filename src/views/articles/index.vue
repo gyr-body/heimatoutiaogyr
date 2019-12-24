@@ -48,8 +48,8 @@
     </el-row>
     <!-- 循环的模板 -->
     <el-row
-      v-for="item in 100"
-      :key="item"
+      v-for="item in list"
+      :key="item.id.toString()"
       class="article-item"
       type="flex"
       justify="space-between"
@@ -57,11 +57,12 @@
       <!-- 左侧 -->
       <el-col :span="14">
         <el-row type="flex">
-          <img src="../../assets/img/404.png" alt />
+          <img :src="item.cover.images.length ? item.cover.images[0] : defaultImg" alt />
           <div class="info">
-            <span>年少不听李宗盛，听懂己是不惑年。</span>
-            <el-tag class="tag">标签一</el-tag>
-            <span class="date">2019-12-24 09:15:42</span>
+            <span>{{item.title}}</span>
+            <!-- //过滤器不仅可以用在插值表达式中，也可以用在v-bind中 -->
+            <el-tag :type="item.status | filterType" class="tag">{{item.status | filterStatus}}</el-tag>
+            <span class="date">{{item.pubdata}}</span>
           </div>
         </el-row>
       </el-col>
@@ -89,7 +90,9 @@ export default {
         channel_id: null, // 默认是空
         dateRange: []
       },
-      channels: [] // 定义一个channels 接收频道
+      channels: [], // 定义一个channels 接收频道
+      list: [],
+      defaultImg: require('../../assets/img/default.gif')
     }
   },
   methods: {
@@ -100,10 +103,52 @@ export default {
       }).then(result => {
         this.channels = result.data.channels // 获取频道数据
       })
+    },
+    getArticles () {
+      this.$axios({
+        url: '/articles' // 请求地址
+      }).then(result => {
+        this.list = result.data.results // 接收文章列表数据
+      })
+    }
+  },
+  filters: {
+    // value 是过滤器前面表达式计算得到的值
+    // 文章状态 0-草稿，1-待审核，2-审核通过，3-审核失败，4-已删除
+    filterStatus (value) {
+      switch (value) {
+        case 0:
+          return '草稿'
+        case 1:
+          return '待审核'
+        case 2:
+          return '审核通过'
+        case 3:
+          return '审核失败'
+        default:
+          break
+      }
+    },
+    // value 是过滤器前面表达式计算得到的值
+    // 文章状态 0-草稿，1-待审核，2-审核通过，3-审核失败，4-已删除
+    filterType (value) {
+      switch (value) {
+        case 0:
+          return 'success'
+        case 1:
+          return 'info'
+        case 2:
+          return 'danger'
+        case 3:
+          return 'warning'
+        default:
+          break
+      }
     }
   },
   created () {
     this.getChannels()
+    this.getArticles()
   }
 }
 </script>
@@ -115,39 +160,39 @@ export default {
   margin-top: 30px;
 }
 .total {
-      margin:60px 0;
-      height: 30px;
-      border-bottom: 1px dashed #ccc;
+  margin: 60px 0;
+  height: 30px;
+  border-bottom: 1px dashed #ccc;
+}
+.article-item {
+  margin: 20px 0;
+  padding: 10px 0;
+  border-bottom: 1px solid #f2f3f5;
+  img {
+    width: 180px;
+    height: 100px;
+    margin-right: 10px;
+    border-radius: 4px;
   }
-  .article-item {
-      margin: 20px 0;
-      padding: 10px 0;
-      border-bottom: 1px solid #f2f3f5;
-      img {
-          width: 180px;
-          height: 100px;
-          margin-right: 10px;
-          border-radius: 4px;
-      }
-      .info {
-          height: 100px;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          .tag {
-              max-width:80px;
-          }
-          .date {
-              color: #999;
-              font-size:12px;
-          }
-      }
-      .right {
-          span {
-              margin-left:8px;
-              font-size: 14px;
-              cursor: pointer;
-          }
-      }
+  .info {
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    .tag {
+      max-width: 80px;
+    }
+    .date {
+      color: #999;
+      font-size: 12px;
+    }
   }
+  .right {
+    span {
+      margin-left: 8px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+  }
+}
 </style>

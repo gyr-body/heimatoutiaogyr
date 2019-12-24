@@ -8,7 +8,7 @@
         <el-button size="small" type="primary">上传文件</el-button>
       </el-upload>
     </el-row>
-    <el-tabs v-model="activeName">
+    <el-tabs v-model="activeName" @tab-click="changeTab">
       <el-tab-pane label="全部素材" name="all">
         <div class="img-list">
           <el-card v-for="item in list" :key="item.id" class="img-card">
@@ -20,13 +20,23 @@
               style="font-size:25px"
               align="middle"
             >
-              <i class="el-icon-star-on"></i>
-              <i class="el-icon-delete-solid"></i>
+              <i
+                @click="collectOrCancel(item)"
+                :style="{color: item.is_collected ? 'red' : ''}"
+                class="el-icon-star-on"
+              ></i>
+              <i class="el-icon-delete-solid" @click="delMaterial(item.id)"></i>
             </el-row>
           </el-card>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="收藏素材" name="collect"></el-tab-pane>
+      <el-tab-pane class="collect" label="收藏素材" name="collect">
+        <div class="img-list">
+          <el-card class="img-card" v-for="item in list" :key="item.id">
+            <img :src="item.url" alt />
+          </el-card>
+        </div>
+      </el-tab-pane>
     </el-tabs>
     <el-row type="flex" justify="center" align="middle" style="height:80px">
       <el-pagination
@@ -65,6 +75,7 @@ export default {
       this.page.currentPage = 1
       this.getAllMaterial()
     },
+    // 获取数据
     getAllMaterial () {
       this.$axios({
         url: 'user/images',
@@ -78,6 +89,7 @@ export default {
         this.page.total = result.data.total_count
       })
     },
+    // 上传文件
     uploadImg (params) {
       this.loading = true // 打开进度条
       let form = new FormData()
@@ -89,6 +101,30 @@ export default {
       }).then(result => {
         this.loading = false // 关闭进度条
         this.getAllMaterial()
+      })
+    },
+    // 删除素材
+    delMaterial (id) {
+      this.$confirm('您确定要删除该素材吗？').then(() => {
+        this.$axios({
+          url: `/user/images/${id}`,
+          method: 'delete'
+        }).then(() => {
+          this.getAllMaterial()
+        })
+      })
+    },
+    collectOrCancel (row) {
+      // 调用 收藏或者取消收藏接口
+      this.$axios({
+        url: `/user/images/${row.id}`,
+        method: 'put',
+        data: {
+          collect: !row.is_collected // 状态取反 收藏 => 取消 取消 => 收藏
+        }
+      }).then(() => {
+        // 成功一定进入到then
+        this.getAllMaterial() // 重新加载数据
       })
     }
   },
@@ -118,6 +154,9 @@ export default {
       bottom: 0;
       left: 0;
       background-color: #f4f5f6;
+      i {
+        cursor: pointer;
+      }
     }
   }
 }

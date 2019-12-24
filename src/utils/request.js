@@ -17,7 +17,7 @@ axios.defaults.transformResponse = [function (data) {
   // data是响应回来的数据
   // debugger
   // let result =JSON.parse(data)
-  return JSONBig.parse(data)
+  return data ? JSONBig.parse(data) : {} // JSONbig.parse 替换 JSON.parse  保证数字的正确
 }]
 // 响应拦截 响应数据 回来 到达then方法之前
 axios.interceptors.response.use(function (response) {

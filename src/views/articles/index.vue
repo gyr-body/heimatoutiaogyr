@@ -9,13 +9,13 @@
       </el-col>
       <el-col :span="18">
         <!-- 单选框 -->
-        <el-radio-group v-model="formData.status">
+        <el-radio-group v-model="formData.status" @change="changeCondition">
           <!-- 5 是默认值，判断是否是5  是5 传null -->
-          <el-radio label="5">全部</el-radio>
-          <el-radio label="0">草稿</el-radio>
-          <el-radio label="1">待审核</el-radio>
-          <el-radio label="2">审核通过</el-radio>
-          <el-radio label="3">审核失败</el-radio>
+          <el-radio :label="5">全部</el-radio>
+          <el-radio :label="0">草稿</el-radio>
+          <el-radio :label="1">待审核</el-radio>
+          <el-radio :label="2">审核通过</el-radio>
+          <el-radio :label="3">审核失败</el-radio>
         </el-radio-group>
       </el-col>
     </el-row>
@@ -24,8 +24,8 @@
         <span>频道列表：</span>
       </el-col>
       <el-col :span="18">
-        <el-select placeholder="请选择" v-model="formData.channel_id">
-          <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id"></el-option>
+        <el-select placeholder="请选择" v-model="formData.channel_id" @change="changeCondition">
+          <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id" ></el-option>
         </el-select>
       </el-col>
     </el-row>
@@ -35,12 +35,15 @@
       </el-col>
       <el-col :span="18">
         <el-date-picker
+           @change="changeCondition"
+          value-format="yyyy-MM-dd"
           v-model="formData.dateRange"
           type="daterange"
           range-separator=" 至 "
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         ></el-date-picker>
+        <!-- {{formData.dateRange}} -->
       </el-col>
     </el-row>
     <el-row class="total">
@@ -62,7 +65,7 @@
             <span>{{item.title}}</span>
             <!-- //过滤器不仅可以用在插值表达式中，也可以用在v-bind中 -->
             <el-tag :type="item.status | filterType" class="tag">{{item.status | filterStatus}}</el-tag>
-            <span class="date">{{item.pubdata}}</span>
+            <span class="date">{{ item.pubdate }}</span>
           </div>
         </el-row>
       </el-col>
@@ -104,12 +107,24 @@ export default {
         this.channels = result.data.channels // 获取频道数据
       })
     },
-    getArticles () {
+    getArticles (params) {
       this.$axios({
-        url: '/articles' // 请求地址
+        url: '/articles', // 请求地址
+        params
       }).then(result => {
         this.list = result.data.results // 接收文章列表数据
       })
+    },
+    // 改变条件
+    changeCondition () {
+      // 组装条件
+      let params = {
+        status: this.formData.status === 5 ? null : this.formData.status, // 不传为 null
+        channel_id: this.formData.channel_id,
+        begin_pubdate: this.formData.dateRange.length ? this.formData.dateRange[0] : null, // 起始时间
+        end_pubdate: this.formData.dateRange.length > 1 ? this.formData.dateRange[1] : null // 结束时间
+      }
+      this.getArticles(params)
     }
   },
   filters: {

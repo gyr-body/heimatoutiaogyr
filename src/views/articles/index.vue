@@ -9,8 +9,9 @@
       </el-col>
       <el-col :span="18">
         <!-- 单选框 -->
-        <el-radio-group>
-          <el-radio label>全部</el-radio>
+        <el-radio-group v-model="formData.status">
+            <!-- 5 是默认值，判断是否是5  是5 传null -->
+          <el-radio label="5">全部</el-radio>
           <el-radio label="0">草稿</el-radio>
           <el-radio label="1">待审核</el-radio>
           <el-radio label="2">审核通过</el-radio>
@@ -23,8 +24,10 @@
         <span>频道列表：</span>
       </el-col>
       <el-col :span="18">
-        <el-select placeholder="请选择">
-          <!-- <el-option></el-option> -->
+        <el-select placeholder="请选择" v-model="formData.channel_id">
+          <el-option v-for="item in channels" :key="item.id"
+             :label="item.name"
+             :value="item.id"></el-option>
         </el-select>
       </el-col>
     </el-row>
@@ -33,7 +36,7 @@
         <span>时间选择：</span>
       </el-col>
       <el-col :span="18">
-        <el-date-picker type="daterange" range-separator= " 至 " start-placeholder="开始日期" end-placeholder="结束日期">
+        <el-date-picker v-model="formData.dateRange" type="daterange" range-separator= " 至 " start-placeholder="开始日期" end-placeholder="结束日期">
 
         </el-date-picker>
       </el-col>
@@ -44,7 +47,27 @@
 <script>
 export default {
   data () {
-    return {}
+    return {
+      formData: {
+        status: 5, // 状态
+        channel_id: null, // 默认是空
+        dateRange: []
+      },
+      channels: [] // 定义一个channels 接收频道
+    }
+  },
+  methods: {
+    // 获取数据
+    getChannels () {
+      this.$axios({
+        url: '/channels'
+      }).then(result => {
+        this.channels = result.data.channels // 获取频道数据
+      })
+    }
+  },
+  created () {
+    this.getChannels()
   }
 }
 </script>

@@ -129,6 +129,7 @@ export default {
         this.channels = result.data.channels // 获取频道数据
       })
     },
+    // 请求文章列表
     getArticles (params) {
       this.$axios({
         url: '/articles', // 请求地址
@@ -159,20 +160,7 @@ export default {
       }
       this.getArticles(params) // 调用获取文章数据
     },
-    // delArticle (id) {
-    //   this.$confirm('你确定要删除此条数据吗？').then(() => {
-    //     this.$axios({
-    //       method: 'delete',
-    //       utl: `articles/${id.toString()}`
-    //     }).then(result => {
-    //       this.$message({
-    //         type: 'success',
-    //         message: '删除成功'
-    //       })
-    //       this.getConditionArticle() // 重新调用
-    //     })
-    //   })
-    // }
+    // 删除文章
     delArticle (id) {
       // 所有已发布的文章是不可以删除的  只有草稿才可以删除
       this.$confirm('您是否要删除这个文章?').then(() => {

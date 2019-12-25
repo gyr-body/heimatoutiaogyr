@@ -76,7 +76,7 @@
           <span>
             <i class="el-icon-edit"></i>修改
           </span>
-          <span>
+          <span @click="delArticle(item.id)">
             <i class="el-icon-delete"></i> 删除
           </span>
         </el-row>
@@ -106,7 +106,7 @@ export default {
       },
       channels: [], // 定义一个channels 接收频道
       list: [],
-      defaultImg: require('../../assets/img/default.gif'),
+      defaultImg: require('../../assets/img/avatar.jpg'),
       page: {
         currentPage: 1, // 当前页码
         pageSize: 10, // 文章列表最低10条
@@ -158,7 +158,37 @@ export default {
           this.formData.dateRange.length > 1 ? this.formData.dateRange[1] : null // 截止时间
       }
       this.getArticles(params) // 调用获取文章数据
-      this.getArticles(params)
+    },
+    // delArticle (id) {
+    //   this.$confirm('你确定要删除此条数据吗？').then(() => {
+    //     this.$axios({
+    //       method: 'delete',
+    //       utl: `articles/${id.toString()}`
+    //     }).then(result => {
+    //       this.$message({
+    //         type: 'success',
+    //         message: '删除成功'
+    //       })
+    //       this.getConditionArticle() // 重新调用
+    //     })
+    //   })
+    // }
+    delArticle (id) {
+      // 所有已发布的文章是不可以删除的  只有草稿才可以删除
+      this.$confirm('您是否要删除这个文章?').then(() => {
+        // 直接删除
+        this.$axios({
+          method: 'delete',
+          url: `/articles/${id.toString()}`
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除文章成功!'
+          })
+          // this.page.currentPage = 1 // 如果想回第一个页 就赋值 为1 否则不用管
+          this.getConditionArticle() // 重新调用
+        })
+      })
     }
   },
   filters: {

@@ -14,9 +14,10 @@
         <el-input v-model="formData.title" style="width:60%" placeholder="文章名称"></el-input>
       </el-form-item>
       <el-form-item prop="content" label="内容">
-        <el-input v-model="formData.content" type="textarea" :rows="18"></el-input>
+        <!-- <el-input v-model="formData.content" type="textarea" :rows="18"></el-input> -->
+        <quill-editor v-model="formData.content" style="height:400px" type="textarea" :rows="18"></quill-editor>
       </el-form-item>
-      <el-form-item prop="type" label="封面">
+      <el-form-item prop="type" label="封面" style="margin-top:120px">
         <el-radio-group v-model="formData.type">
           <el-radio :label="1">单图</el-radio>
           <el-radio :label="3">三图</el-radio>
@@ -145,29 +146,6 @@ export default {
           }).then(result => {
             this.$router.push('/home/articles') // 回到内容列表
           })
-          // if (articleId) {
-          //   // 修改文章
-          //   this.$axios({
-          //     method: 'put',
-          //     url: `/articles/${articleId}`,
-          //     params: { draft }, // query参数
-          //     data: this.formData
-          //   }).then(() => {
-          //   // 新增成功 => 应该去内容列表
-          //     this.$router.push('/home/articles') // 回到内容列表
-          //   })
-          // } else {
-          // // 可以去进行 发布接口调用
-          //   this.$axios({
-          //     url: '/articles',
-          //     method: 'post',
-          //     params: { draft }, // query参数
-          //     data: this.formData
-          //   }).then(() => {
-          //   // 新增成功 => 应该去内容列表
-          //     this.$router.push('/home/articles') // 回到内容列表
-          //   })
-          // }
         }
       })
     },
@@ -180,23 +158,9 @@ export default {
         this.formData = result.data // 将指定文章数据给data数据
       })
     }
-    //   getArticleById (articleId) {
-    //     this.$axios({
-    //       url: `/articles/${articleId}`
-    //     }).then(result => {
-    //       this.formData = result.data // 将指定文章数据给data数据
-    //     })
-    //   }
-    // },
-    // created () {
-    //   this.getChannels() // 获取频道数据
-    //   // 获取id 判断有无id  有id 就是修改 没id就是发布
-    //   let { articleId } = this.$route.params // 回去动态路由参数 articleId已经是字符串
-    //   articleId && this.getArticleById(articleId) // 获取文章数据
   },
   created () {
     this.getChannels() // 获取频道数据
-    // 获取id
     // 获取id 判断有无id  有id 就是修改 没id就是发布
     let { articleId } = this.$route.params // 回去动态路由参数 articleId已经是字符串
     articleId && this.getArticleById(articleId) // 获取文章数据

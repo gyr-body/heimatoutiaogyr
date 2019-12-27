@@ -41,6 +41,10 @@ const routes = [
     {
       path: 'publish/:articleId', // 修改文章数据 动态路由参数
       component: () => import('../views/publish')
+    },
+    {
+      path: 'account',
+      component: () => import('../views/account')
     }
     ]
   },

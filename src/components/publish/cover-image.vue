@@ -1,9 +1,10 @@
 <template>
-<div class="coner-image">
-    <div class="cover-item" v-for="(item,index) in list" :key="index">
-        <img src="../../assets/img/pic_bg.png" alt="" srcset="">
-    </div>
-</div>
+<div class='cover-image'>
+      <!-- 根据封面的images长度 进行渲染 一个或者3个或者不渲染 -->
+      <div v-for="(item,index) in list" :key="index" class='cover-item'>
+         <img src="../../assets/img/pic_bg.png" alt="">
+      </div>
+  </div>
 </template>
 
 <script>
@@ -12,11 +13,11 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-.cover-image {
+<style lang='less' scoped>
+  .cover-image {
     display: flex;
     margin:20px 0;
-    margin-left: 100px;
+    // margin-left: 20px;
      .cover-item {
        border: 1px solid #ccc;
        width: 250px;

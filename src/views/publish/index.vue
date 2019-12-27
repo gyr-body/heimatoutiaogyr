@@ -30,8 +30,8 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-       <el-button @click="publishArticle()" type='primary'>发布</el-button>
-          <el-button @click="publishArticle(true)">存入草稿</el-button>
+        <el-button @click="publishArticle()" type="primary">发布</el-button>
+        <el-button @click="publishArticle(true)">存入草稿</el-button>
       </el-form-item>
     </el-form>
   </el-card>
@@ -79,6 +79,23 @@ export default {
       }
     }
   },
+  watch: {
+    $route: function (to, from) {
+      if (Object.keys(to.params).length) {
+        // 有参数  =>修改
+      } else {
+        // 没有参数 =>  发布
+        this.formData = {
+          title: '',
+          content: '',
+          cover: {
+            type: 0,
+            images: []
+          }
+        }
+      }
+    }
+  },
   methods: {
     //   获取频道
     getChannels () {
@@ -90,7 +107,7 @@ export default {
     },
     // 发布文章
     publishArticle (draft) {
-      this.$refs.publishForm.validate((isOK) => {
+      this.$refs.publishForm.validate(isOK => {
         if (isOK) {
           // 可以去进行 发布接口调用
           console.log('校验成功')

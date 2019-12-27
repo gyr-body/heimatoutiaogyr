@@ -74,7 +74,7 @@
       <el-col :span="6">
         <el-row class="right" type="flex" justify="end">
           <span>
-            <i class="el-icon-edit"></i>修改
+            <i class="el-icon-edit" @click="toPublish(item.id)"></i>修改
           </span>
           <span @click="delArticle(item.id)">
             <i class="el-icon-delete"></i> 删除
@@ -115,6 +115,9 @@ export default {
     }
   },
   methods: {
+    toPublish (id) {
+      this.$router.push(`/home/publish/${id.toString()}`) // 跳转到发表文章页面
+    },
     // 改变页码事件
     changePage (newPage) {
       // 赋值当前页码

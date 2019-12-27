@@ -18,12 +18,14 @@
         <quill-editor v-model="formData.content" style="height:400px" type="textarea" :rows="18"></quill-editor>
       </el-form-item>
       <el-form-item prop="type" label="封面" style="margin-top:120px">
-        <el-radio-group v-model="formData.type">
+        <el-radio-group v-model="formData.cover.type">
           <el-radio :label="1">单图</el-radio>
           <el-radio :label="3">三图</el-radio>
           <el-radio :label="0">无图</el-radio>
           <el-radio :label="-1">自动</el-radio>
         </el-radio-group>
+        {{formData.cover}}
+        <!-- <cover-image :list="formData.cover.images"></cover-image> -->
       </el-form-item>
       <el-form-item prop="channel_id" label="频道">
         <el-select v-model="formData.channel_id">
@@ -80,10 +82,23 @@ export default {
       }
     }
   },
+  // 'formData.cover.type': function () {
+  //   //  this指向组件实例
+  //   if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
+  //     // 无图或者自动模式
+  //     this.formData.cover.images = []
+  //   } else if (this.formData.cover.type === 1) {
+  //     this.formData.cover.images = [''] // 单图模式
+  //   } else if (this.formData.cover.type === 3) {
+  //     this.formData.cover.images = ['', '', ''] // 单图模式
+  //   }
+  // },
   watch: {
+    // 解决两个路由公用一个组件跳转的时候，组件没有销毁
     $route: function (to, from) {
       if (Object.keys(to.params).length) {
         // 有参数  =>修改
+        this.getArticleById(to.params.srticleId) // 重新拉取数据
       } else {
         // 没有参数 =>  发布
         this.formData = {
@@ -94,6 +109,17 @@ export default {
             images: []
           }
         }
+      }
+    },
+    // 监控嵌套对象中的值
+    'formData.cover.type': function () {
+      // this指向组件实例
+      if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
+        this.formData.cover.images = []
+      } else if (this.formData.cover.type === 1) {
+        this.formData.cover.images = [''] // 单图模式
+      } else if (this.formData.cover.type === 3) {
+        this.formData.cover.images = ['', '', ''] // 三图模式
       }
     }
   },

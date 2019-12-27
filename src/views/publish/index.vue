@@ -3,19 +3,19 @@
     <bread-crumb slot="header">
       <template slot="title">发表文章</template>
     </bread-crumb>
-    <el-form style="margin-left:80px" label-width="100px">
-      <el-form-item label="标题">
-        <el-input style="width:60%" placeholder="文章名称"></el-input>
+    <el-form ref='publishForm' :model="formData" :rules="publishRules"  style="margin-left:80px" label-width="100px">
+      <el-form-item prop="title" label="标题">
+        <el-input v-model="formData.title" style="width:60%" placeholder="文章名称"></el-input>
       </el-form-item>
-      <el-form-item label="内容">
-        <el-input type="textarea" :rows="18"></el-input>
+      <el-form-item prop="content" label="内容">
+        <el-input v-model="formData.content" type="textarea" :rows="18"></el-input>
       </el-form-item>
-      <el-form-item label="封面">
-        <el-radio-group>
-          <el-radio>单图</el-radio>
-          <el-radio>三图</el-radio>
-          <el-radio>无图</el-radio>
-          <el-radio>自动</el-radio>
+      <el-form-item prop="type" label="封面">
+        <el-radio-group v-model="formData.cover.type">
+          <el-radio :label="1">单图</el-radio>
+          <el-radio :label="3">三图</el-radio>
+          <el-radio :label="0">无图</el-radio>
+          <el-radio :label="-1">自动</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item prop="channel_id" label="频道">
@@ -24,7 +24,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary">发表</el-button>
+        <el-button type="primary" @click="publishArticle">发表</el-button>
         <el-button>存入草稿</el-button>
       </el-form-item>
     </el-form>
@@ -36,9 +36,36 @@ export default {
   data () {
     return {
       formData: {
-        channel_id: null
+        title: '',
+        content: '', // 文章内容
+        cover: {
+          type: 0, // 封面类型  自动：-1; 无图：0; 1张图：1 ; 3张图：3
+          images: '' // 图片地址
+        },
+        channel_id: null // 频道id
       },
-      channel: [] // 定义一个channels 接收频道
+      channel: [], // 定义一个channels 接收频道
+      // 表单校验 规则
+      publishRules: {
+        title: [{
+          required: true,
+          message: '标题内容不能为空'
+        },
+        {
+          min: 3,
+          max: 30,
+          message: '标题长度必须载3到30 字符之间'
+        }
+        ],
+        content: [{
+          required: true,
+          message: '文章内容不能为空'
+        }],
+        channel_id: [{
+          required: true,
+          message: '频道不能为空'
+        }]
+      }
     }
   },
   methods: {
@@ -48,6 +75,14 @@ export default {
         url: '/channels'
       }).then(result => {
         this.channel = result.data.channels // 获取频道数据
+      })
+    },
+    // 发布文章
+    publishArticle () {
+      this.$refs.publishForm.validate(function (isOK) {
+        if (isOK) {
+          console.log('校验成功')
+        }
       })
     }
   },

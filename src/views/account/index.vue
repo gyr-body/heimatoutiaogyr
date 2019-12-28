@@ -40,6 +40,7 @@ export default {
         email: '', // 头像
         mobile: '' // 手机号
       },
+      loading: false,
       // 表单校验 规则
       rules: {
 

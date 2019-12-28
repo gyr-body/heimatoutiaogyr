@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import eventBus from '../../utils/eventBus'
 export default {
   data () {
     return {
@@ -36,19 +37,33 @@ export default {
     }
   },
   created () {
-    let token = window.localStorage.getItem('user-token') // 获取令牌
-    // 查询数据
-    this.$axios({
-      url: '/user/profile',
-      //   headers参数
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }).then(result => {
-      this.userInfo = result.data // 获取用户个人信息
+    // let token = window.localStorage.getItem('user-token') // 获取令牌
+    // // 查询数据
+    // this.$axios({
+    //   url: '/user/profile',
+    //   //   headers参数
+    //   headers: {
+    //     Authorization: `Bearer ${token}`
+    //   }
+    // }).then(result => {
+    //   this.userInfo = result.data // 获取用户个人信息
+    // })
+    this.getUserInfo()
+    // 实例创建完毕 立刻监听
+    eventBus.$on('updateUserInfoSuccess', () => {
+      // 别人告诉你 它更新了数据 应该立刻处理
+      this.getUserInfo()
     })
   },
   methods: {
+    getUserInfo () {
+      this.$axios({
+        url: '/user/profile'
+      //   headers参数
+      }).then(result => {
+        this.userInfo = result.data // 获取用户个人信息
+      })
+    },
     handle (commad) {
       // 区分点击的菜单项
       if (commad === 'lgout') {

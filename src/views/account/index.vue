@@ -29,10 +29,10 @@
 </template>
 
 <script>
+import eventBus from '../../utils/eventBus'
 export default {
   data () {
     return {
-      loading: false,
       formData: {
         name: '', // 用户名
         intro: '', // 简介
@@ -61,6 +61,7 @@ export default {
         data
       }).then(result => {
         this.formData.photo = result.data.photo // 设置头像地址
+        eventBus.$emit('updateUserInfoSuccess') // 触发一个自定义事件 updateUserInfoSuccess
         this.loading = false // 关调弹层
       })
     },
@@ -87,6 +88,9 @@ export default {
               type: 'success',
               message: '保存信息成功'
             })
+            // 需要告诉头部组件 我更新成功了 你也要更新
+            // this.$emit('')
+            eventBus.$emit('updateUserInfoSuccess') // 触发一个自定义事件 updateUserInfoSuccess
           })
         }
       })

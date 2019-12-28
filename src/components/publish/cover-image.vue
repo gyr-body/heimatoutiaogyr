@@ -1,14 +1,15 @@
 <template>
-<div class='cover-image'>
-      <!-- 根据封面的images长度 进行渲染 一个或者3个或者不渲染 -->
-      <div @click="openDislog" v-for="(item,index) in list" :key="index" class='cover-item'>
-         <img :src="item ? item : defaultImg" alt="">
+  <div class="cover-image">
+      <div @click="openDialog(index)" v-for="(item,index) in list" :key="index" class="cover-item">
+          <!-- <img src="../../assets/img/jie.jpg" alt=""> -->
+          <img :src="item?item:defaultImg" alt="">
+          <!-- defaultImg为默认图片 -->
       </div>
-      <!-- visible 控制显示隐藏  -->
-      <el-dialog :visible="dialogVisible" @close="closeDislog">
+      <el-dialog :visible="dialogVisible" @close ="closeDialog">
         <!-- 选择素材组件 -->
-        <select-image></select-image>
+        <select-image @selectOneImg="receiveImg"></select-image>
       </el-dialog>
+
   </div>
 </template>
 
@@ -17,26 +18,34 @@ export default {
   props: ['list'], // 接收属性
   data () {
     return {
-      dialogVisible: false, // 控制弹层打开或关闭
-      defaultImg: require('../../assets/img/pic_bg.png')
+      dialogVisible: false,
+      defaultImg: require('../../assets/img/admire.png'),
+      selectIndex: -1
     }
   },
   methods: {
-    openDislog () {
-      this.dialogVisible = true
+    receiveImg (img) {
+      this.$emit('clickOneImg', img, this.selectIndex)
+      this.closeDialog()
     },
-    closeDislog () {
+    openDialog (index) {
+      this.selectIndex = index // 记住点击的下标
+      this.dialogVisible = true // 打开弹层
+    },
+    closeDialog () {
       this.dialogVisible = false
     }
+
   }
+
 }
 </script>
 
-<style lang='less' scoped>
-  .cover-image {
+<style lang="less" scoped>
+.cover-image {
     display: flex;
     margin:20px 0;
-    // margin-left: 20px;
+    margin-left: 100px;
      .cover-item {
        border: 1px solid #ccc;
        width: 250px;
@@ -48,4 +57,5 @@ export default {
        }
      }
   }
+
 </style>

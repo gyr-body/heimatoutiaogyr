@@ -2,9 +2,9 @@
   <!-- 放置一个外层容器 -->
   <el-container>
     <!-- 左右布局 -->
-    <el-aside style="background-color:#353b4e;min-height:100vh;width:230px">
+    <el-aside :style="{width:collaspse ? '60px' : '230px'}" style="transition:all 0.3s;background-color:#353b4e;min-height:100vh">
       <!-- 放置左侧组件 -->
-      <layout-aside></layout-aside>
+      <layout-aside :collaspse='collaspse'></layout-aside>
     </el-aside>
     <!-- 再放置一个container -->
     <el-container>
@@ -23,9 +23,20 @@
 </template>
 
 <script>
+import eventBus from '../../utils/eventBus'
 // import loginAside from '../../components/home/layout-aside'
 // import layoutHeader from '../../components/home/layout-header'
 export default {
+  data () {
+    return {
+      collaspse: false
+    }
+  },
+  created () {
+    eventBus.$on('changeCollapse', () => {
+      this.collaspse = !this.collaspse
+    })
+  }
   // components: {
   //   'login-aside': loginAside,
   //   'layout-header': layoutHeader

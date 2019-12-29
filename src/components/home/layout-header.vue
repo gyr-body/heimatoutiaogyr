@@ -4,7 +4,7 @@
     <!-- 左侧 -->
     <el-col class="left" :span="6">
       <!-- 左侧图标 -->
-      <i class="el-icon-s-unfold"></i>
+      <i @click="collaspseOrOpen" :class="{'el-icon-s-unfold': collaspse,'el-icon-s-fold':!collaspse}"></i>
       <span class="title">江苏传智播客教育科技股份有限公司</span>
     </el-col>
     <!-- 右侧 -->
@@ -32,6 +32,7 @@ import eventBus from '../../utils/eventBus'
 export default {
   data () {
     return {
+      collaspse: false, // 是否折叠
       userInfo: {}, // 用户信息
       defaultImg: require('../../assets/img/avatar.jpg') // 先把地址转换成变量
     }
@@ -56,6 +57,12 @@ export default {
     })
   },
   methods: {
+    // 折叠或展开
+    collaspseOrOpen () {
+      // 取反
+      this.collaspse = !this.collaspse
+      eventBus.$emit('changeCollapse') // 改变折叠状态
+    },
     getUserInfo () {
       this.$axios({
         url: '/user/profile'

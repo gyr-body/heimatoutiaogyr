@@ -13,6 +13,10 @@ const routes = [
     redirect: '/home'
   },
   {
+    path: '*',
+    component: () => import('../views/404') // 404页面
+  },
+  {
     // 配置路由表  主页
     path: '/home',
     name: 'home',
